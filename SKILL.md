@@ -1,16 +1,16 @@
 ---
-name: doc-conversion-audit
-description: Audit and repair text produced by automated document conversion (MinerU, Pandoc, markitdown, docling, OCR, unstructured) from PDF, Word, Excel, PowerPoint, HTML, or scanned images into Markdown/HTML/plain text. Use when converted output has broken heading hierarchy, missing or misplaced table captions, malformed or wrongly-spanned tables, lost page continuations, OCR typos, mixed half/full-width punctuation, or when a conversion must be verified against its source before delivery. Triggers include "转出来的 md 有问题", "对比原件修正", "转换质量检查", "PDF 转 Markdown 校对", "表格错位", "标题层级乱了", "目录对不上", "帮我把这个转换结果修一下".
+name: pdf-mineru-markdown-repair
+description: Repair Markdown produced by MinerU from scanned or born-digital PDFs, and the equivalent output of other converters (Pandoc, markitdown, docling, OCR, unstructured) from Word, Excel, PowerPoint or images. Use when the converted file has broken heading hierarchy, tables with wrong column spans or a lost second page, missing or misplaced table captions, unmarked continuation pages, OCR typos, mixed half/full-width punctuation, or when the output must be verified against the source PDF before delivery. Triggers include "PDF 转出来的 md 有问题", "MinerU 结果对比原件修一下", "表格错位", "标题层级乱了", "目录对不上", "转换质量检查", "PDF 转 Markdown 校对".
 agent_created: true
 ---
 
-# Document Conversion Audit
+# PDF → Markdown Repair
 
 ## Overview
 
-Automated document conversion (MinerU, Pandoc, markitdown, docling, OCR pipelines) preserves *characters* but loses *structure*. The output is always a draft, never a deliverable: heading levels are assigned randomly, tables lose geometry, cross-page content merges or splits arbitrarily, and captions drift away from their objects.
+MinerU, Pandoc, markitdown, docling and OCR pipelines turn a PDF into Markdown that preserves *characters* but loses *structure*. Heading levels are assigned by font-size heuristics, tables lose their geometry, cross-page content merges or splits arbitrarily, and captions drift away from the objects they name. The output is always a draft.
 
-This skill defines a reproducible audit-and-repair procedure that works for any source-to-text conversion, plus the discipline required to avoid "fixing" things that were never broken.
+The scan-PDF case is the hardest and the default assumption here: no text layer, so every claim about "what the source says" requires rendering the page and looking. The procedure below is written for that case and degrades gracefully to born-digital PDFs and Office sources, where a text layer makes verification cheaper.
 
 ## Core Principles
 

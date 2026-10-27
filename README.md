@@ -1,40 +1,50 @@
-# doc-conversion-audit
+# PDF-MinerU-Markdown-Repair
 
-A WorkBuddy skill for auditing and repairing text produced by automated document conversion — MinerU, Pandoc, markitdown, docling, OCR pipelines — from PDF, Word, Excel, PowerPoint, HTML, or scanned images into Markdown.
+A WorkBuddy skill for repairing Markdown produced by **MinerU** from scanned or born-digital PDFs — and, since the failure modes are shared, the equivalent output of Pandoc, markitdown, docling and OCR pipelines from Word, Excel, PowerPoint or images.
 
-Converters preserve characters and lose structure. Heading levels get assigned by font-size heuristics, tables lose their geometry, cross-page content merges or splits arbitrarily, and captions drift away from the objects they name. The output is always a draft.
+MinerU preserves characters and loses structure. Heading levels get assigned by font-size heuristics, tables lose their geometry, a table spanning two pages merges into one block or splits without a marker, and captions drift away from the objects they name. The output is always a draft, never a deliverable.
 
-This skill encodes a reproducible repair procedure plus the discipline needed to avoid "fixing" things that were never broken.
+This skill encodes a reproducible repair procedure plus the discipline needed to avoid "fixing" things that were never broken — the source's own misprints, its numbering conventions, and its deliberate layout.
 
 ## What it covers
 
 | Category | Examples |
 |---|---|
 | Structure | Random heading levels, title fragments split onto their own line, section headings left as plain text, appendix level demotion |
-| Tables | Objects present only in a secondary container, two tables fused into one, unmarked continuation pages, wrong column spans, fused cells, four distinct caption failures |
-| Text | Mixed half/full-width punctuation, entities corrupted by width conversion, ratio glyph vs colon, tilde becoming strikethrough, converter boilerplate |
-| Source-specific | Scanned PDF (render-only verification, page mapping), born-digital PDF, Word style hierarchy, Excel merges, PowerPoint shape order, HTML chrome |
+| Tables | Objects present only in a secondary JSON container, two tables fused into one, unmarked continuation pages, wrong column spans shifting a whole row, fused cells, four distinct caption failures |
+| Text | Mixed half/full-width punctuation, HTML entities corrupted by width conversion, ratio glyph vs colon, tilde becoming strikethrough, converter boilerplate |
+| Scanned PDF | No text layer (render-only verification), page-folio mapping, page-template assertions, three-class image triage |
+| Other sources | Word style hierarchy, Excel merged cells, PowerPoint shape order, HTML navigation chrome |
 
 ## Install
 
-Copy the directory into your WorkBuddy skills folder:
+Clone or copy the directory into your WorkBuddy skills folder. Use the lowercase target path — the skill loader matches the directory name against the `name` field in `SKILL.md`, which is `pdf-mineru-markdown-repair`:
+
+```bash
+git clone https://github.com/bws-fl/PDF-MinerU-Markdown-Repair.git \
+          ~/.workbuddy/skills/pdf-mineru-markdown-repair
+```
+
+From a local copy:
 
 ```bash
 # user-level: available in all projects
-cp -r doc-conversion-audit ~/.workbuddy/skills/
+cp -r PDF-MinerU-Markdown-Repair ~/.workbuddy/skills/pdf-mineru-markdown-repair
 
-# or project-level: shared with everyone using the repository
-cp -r doc-conversion-audit .workbuddy/skills/
+# project-level: shared with everyone using the repository
+cp -r PDF-MinerU-Markdown-Repair .workbuddy/skills/pdf-mineru-markdown-repair
 ```
+
+On Windows and macOS the filesystem is case-insensitive, so the capitalised folder name works as-is; on Linux, rename it to lowercase after cloning.
 
 ## Use
 
 Ask in natural language — the skill triggers on requests like:
 
-- "转出来的 md 有问题，帮我修一下"
-- "对比原件修正这个转换结果"
+- "PDF 转出来的 md 有问题，对比原件修一下"
+- "MinerU 结果表格错位了"
+- "标题层级乱了" / "目录对不上"
 - "PDF 转 Markdown 校对"
-- "表格错位了" / "标题层级乱了" / "目录对不上"
 
 Or run the standalone audit script on any converted file:
 
@@ -44,7 +54,7 @@ python scripts/audit.py FILE.md --cjk      # also treat half-width , ; : ~ as de
 python scripts/audit.py FILE.md --json     # machine-readable
 ```
 
-Sample output on a clean file:
+Sample output on a clean 752-page conversion:
 
 ```
 PASS  BOM 唯一           1
@@ -73,18 +83,18 @@ Exit code is non-zero when any check fails, so it drops straight into a pipeline
 ## Contents
 
 ```
-SKILL.md                        three principles, 7-question recon, six repair layers, 6 red lines
-references/defect-catalog.md    defect taxonomy: structure A1-A4, tables B1-B8, text C1-C8, per-source-type
-references/checklist.md         five assertion classes, 7 false-positive traps, repair-order rule
+SKILL.md                            three principles, 7-question recon, six repair layers, 6 red lines
+references/defect-catalog.md        defect taxonomy: structure A1-A4, tables B1-B8, text C1-C8, per-source-type
+references/checklist.md             five assertion classes, 7 false-positive traps, repair-order rule
 references/case-water-standards.md  worked case: 7 Chinese water-industry standards with measured numbers
-scripts/audit.py                standalone structural audit, stdlib only
+scripts/audit.py                    standalone structural audit, stdlib only
 ```
 
-The case file holds the measurements; `SKILL.md` holds only what transfers between documents. Numbers there are calibration for expected defect density, not rules.
+The case file holds the measurements; `SKILL.md` holds only what transfers between documents. Numbers there are calibration for expected defect density, not rules to apply blindly.
 
 ## Requirements
 
-Python 3.8+. `audit.py` uses the standard library only. Rendering source pages for visual verification needs PyMuPDF, but that is used ad hoc rather than by the script.
+Python 3.8+. `audit.py` uses the standard library only. Rendering source pages for visual verification needs PyMuPDF, used ad hoc rather than by the script.
 
 ## License
 
