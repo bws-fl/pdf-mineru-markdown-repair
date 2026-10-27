@@ -18,24 +18,22 @@ This skill encodes a reproducible repair procedure plus the discipline needed to
 
 ## Install
 
-Clone or copy the directory into your WorkBuddy skills folder. Use the lowercase target path — the skill loader matches the directory name against the `name` field in `SKILL.md`, which is `pdf-mineru-markdown-repair`:
+Clone into your WorkBuddy skills folder. The directory name must match the `name` field in `SKILL.md` (`pdf-mineru-markdown-repair`) — clone it as-is, no rename needed:
 
 ```bash
-git clone https://github.com/bws-fl/PDF-MinerU-Markdown-Repair.git \
+git clone https://github.com/bws-fl/pdf-mineru-markdown-repair.git \
           ~/.workbuddy/skills/pdf-mineru-markdown-repair
 ```
 
-From a local copy:
+From a local copy of the repository:
 
 ```bash
 # user-level: available in all projects
-cp -r PDF-MinerU-Markdown-Repair ~/.workbuddy/skills/pdf-mineru-markdown-repair
+cp -r pdf-mineru-markdown-repair ~/.workbuddy/skills/
 
 # project-level: shared with everyone using the repository
-cp -r PDF-MinerU-Markdown-Repair .workbuddy/skills/pdf-mineru-markdown-repair
+cp -r pdf-mineru-markdown-repair .workbuddy/skills/
 ```
-
-On Windows and macOS the filesystem is case-insensitive, so the capitalised folder name works as-is; on Linux, rename it to lowercase after cloning.
 
 ## Use
 
