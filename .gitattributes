@@ -1,0 +1,4 @@
+# keep text files LF in the repository regardless of platform
+* text=auto eol=lf
+*.py text eol=lf
+*.md text eol=lf
